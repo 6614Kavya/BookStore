@@ -33,14 +33,19 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login} from './src/screens/Login';
 import {Signup} from './src/screens/Signup';
 import {Home} from './src/screens/Home';
+import GetStarted from './src/screens/GetStarted';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
 const Stack = createNativeStackNavigator({
-  initialRouteName: 'Login',
+  initialRouteName: 'Start',
+  screenOptions: {
+    headerShown: false, // Hide header title for all screens
+  },
   screens: {
+    Start: GetStarted,
     Home: Home,
     Login: Login,
     Signup: Signup,
