@@ -1,5 +1,6 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import useStore from '../store';
 
 interface BookCardProps {
   title: string;
@@ -14,14 +15,24 @@ export const BookCard = ({
   description,
   image,
 }: BookCardProps) => {
+  const {clickCount, increment} = useStore();
+
+  const handleItemPress = () => {
+    increment();
+  };
+
   return (
     <View style={styles.bookItem}>
-      {image && <Image source={{uri: image}} style={styles.bookImage} />}
+      <View
+        style={{flexDirection: 'row', justifyContent: 'center', padding: 5}}>
+        {image && <Image source={{uri: image}} style={styles.bookImage} />}
+      </View>
+
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.author}>By: {author}</Text>
       <Text style={styles.description}>{description}</Text>
       <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-        <TouchableOpacity style={styles.LogInButton}>
+        <TouchableOpacity style={styles.LogInButton} onPress={handleItemPress}>
           <Text style={styles.ButtonText}>Click me!</Text>
         </TouchableOpacity>
       </View>
