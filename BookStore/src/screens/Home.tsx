@@ -13,7 +13,7 @@ import useStore from '../store';
 export const Home = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {clickCount, increment, reset} = useStore();
+  const {clickCount} = useStore();
 
   const getBooks = async () => {
     try {

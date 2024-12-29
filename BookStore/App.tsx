@@ -40,7 +40,7 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 const Stack = createNativeStackNavigator({
-  initialRouteName: 'Home',
+  initialRouteName: 'Signup',
   screenOptions: {
     headerShown: false, // Hide header title for all screens
   },
