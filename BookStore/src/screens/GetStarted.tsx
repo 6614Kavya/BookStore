@@ -1,7 +1,10 @@
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const GetStarted = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.Container}>
       <Text style={{fontSize: 36, color: 'white', textAlign: 'center'}}>
@@ -10,7 +13,9 @@ const GetStarted = () => {
       <Text style={{fontSize: 36, color: 'white', textAlign: 'center'}}>
         You'll fall in love!
       </Text>
-      <TouchableOpacity style={styles.SignUpButton}>
+      <TouchableOpacity
+        style={styles.SignUpButton}
+        onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.ButtonText}>Sign Up</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.LogInButton}>

@@ -12,12 +12,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 
 export const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
+  const navigation = useNavigation();
 
   const signUp = async () => {
     console.log('Signup started');
@@ -65,7 +67,12 @@ export const Signup = () => {
         onChangeText={text => setPassword(text)}
       />
 
-      <TouchableOpacity style={styles.LogInButton} onPress={() => signUp()}>
+      <TouchableOpacity
+        style={styles.LogInButton}
+        onPress={() => {
+          signUp();
+          navigation.navigate('Login', {userName: username});
+        }}>
         <Text style={styles.ButtonText}>Sign Up</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>

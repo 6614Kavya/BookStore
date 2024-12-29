@@ -6,15 +6,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FIREBASE_AUTH} from '../../FirebaseConfig';
 import {signInWithEmailAndPassword} from 'firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 
-export const Login = () => {
+export const Login = ({route}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
+  const navigation = useNavigation();
 
   const signIn = async () => {
     try {
@@ -25,6 +27,10 @@ export const Login = () => {
       alert('Sign In failed! ' + error);
     }
   };
+
+  useEffect(() => {
+    setUsername(route.params);
+  }, []);
   return (
     <KeyboardAvoidingView style={styles.Container}>
       <Text style={{fontSize: 24, color: 'white', textAlign: 'center'}}>
@@ -51,7 +57,12 @@ export const Login = () => {
         onChangeText={text => setPassword(text)}
       />
 
-      <TouchableOpacity style={styles.LogInButton} onPress={() => signIn()}>
+      <TouchableOpacity
+        style={styles.LogInButton}
+        onPress={() => {
+          signIn();
+          navigation.navigate('Home', {userName: username});
+        }}>
         <Text style={styles.ButtonText}>Log In</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>

@@ -10,7 +10,8 @@ import axios from 'axios';
 import {BookCard} from '../components/BookCard';
 import useStore from '../store';
 
-export const Home = () => {
+export const Home = ({route}) => {
+  const [userName, setUserName] = useState('');
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const {clickCount} = useStore();
@@ -39,6 +40,8 @@ export const Home = () => {
   };
 
   useEffect(() => {
+    const {userName: name} = route.params || {}; // Destructure safely
+    setUserName(name || 'Guest');
     getBooks();
   }, []);
 
@@ -59,6 +62,9 @@ export const Home = () => {
       <View style={styles.floatingButton}>
         <Text style={styles.buttonText}>{clickCount}</Text>
       </View>
+      <Text style={{fontSize: 24, color: 'white', textAlign: 'center'}}>
+        Hi {userName}!
+      </Text>
       <FlatList
         data={items}
         renderItem={({item}) => (
