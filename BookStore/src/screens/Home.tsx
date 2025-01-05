@@ -44,7 +44,7 @@ export const Home = ({route, navigation}) => {
   };
 
   const handleLogout = async () => {
-    // navigation.replace('Login'); // Navigate to the login screen on logout
+    navigation.replace('Login'); // Navigate to the login screen on logout
     try {
       await signOut(auth);
       console.log('User logged out successfully!');
@@ -84,7 +84,7 @@ export const Home = ({route, navigation}) => {
           fontSize: 24,
           color: 'white',
           textAlign: 'center',
-          paddingBottom: 10,
+          paddingBottom: 30,
         }}>
         Hi {userName}!
       </Text>
