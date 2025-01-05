@@ -15,16 +15,25 @@ export const Login = ({route}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const auth = FIREBASE_AUTH;
   const navigation = useNavigation();
 
   const signIn = async () => {
     try {
-      const response = signInWithEmailAndPassword(auth, email, password);
+      const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
-      alert('Check your emails!');
-    } catch (error) {
-      alert('Sign In failed! ' + error);
+      navigation.navigate('Home', {userName: username});
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found') {
+        setError('No user found with this email.');
+      } else if (error.code === 'auth/wrong-password') {
+        setError('Incorrect password.');
+      } else if (error.code === 'auth/invalid-email') {
+        setError('Invalid email format.');
+      } else {
+        setError('Login failed. Please try again.');
+      }
     }
   };
 
@@ -37,12 +46,12 @@ export const Login = ({route}) => {
         Sign In to your Account!
       </Text>
 
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Username"
         placeholderTextColor="#888"
         onChangeText={text => setUsername(text)}
-      />
+      /> */}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -56,12 +65,12 @@ export const Login = ({route}) => {
         secureTextEntry={true}
         onChangeText={text => setPassword(text)}
       />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <TouchableOpacity
         style={styles.LogInButton}
         onPress={() => {
           signIn();
-          navigation.navigate('Home', {userName: username});
         }}>
         <Text style={styles.ButtonText}>Log In</Text>
       </TouchableOpacity>
@@ -113,6 +122,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  error: {color: 'red', alignItems: 'flex-start', marginBottom: 12},
 });
 function alert(arg0: string) {
   throw new Error('Function not implemented.');

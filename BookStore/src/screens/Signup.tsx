@@ -6,41 +6,70 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {FIREBASE_AUTH} from '../../FirebaseConfig';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 
 export const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: '',
+    general: '',
+  });
   const auth = FIREBASE_AUTH;
   const navigation = useNavigation();
 
+  const validateInputs = () => {
+    let isValid = true;
+    let newErrors = {
+      username: '',
+      email: '',
+      password: '',
+      general: '',
+    };
+
+    if (!username.trim()) {
+      newErrors.username = 'Username cannot be empty.';
+      isValid = false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      newErrors.email = 'Please enter a valid email address.';
+      isValid = false;
+    }
+
+    if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long.';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const signUp = async () => {
-    console.log('Signup started');
+    if (!validateInputs()) return;
+
     try {
-      console.log('Signup started2');
-      console.log('Email:', email);
-      console.log('Password:', password);
-      console.log('FIREBASE_AUTH:', FIREBASE_AUTH);
       const response = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
       );
-      console.log('Signup started3');
-      console.log(response);
       console.log('User created:', response);
-      alert('Check your emails!');
-    } catch (error) {
-      alert('Sign In failed! ' + error);
+      // alert('Account created! Check your email for verification.');
+      navigation.navigate('Login', {userName: username});
+    } catch (error: any) {
+      setErrors({general: error.message});
     }
   };
+
   return (
     <KeyboardAvoidingView style={styles.Container}>
       <Text style={{fontSize: 24, color: 'white', textAlign: 'center'}}>
@@ -51,28 +80,45 @@ export const Signup = () => {
         style={styles.input}
         placeholder="Username"
         placeholderTextColor="#888"
-        onChangeText={text => setUsername(text)}
+        onChangeText={text => {
+          setUsername(text);
+          setErrors({...errors, username: ''}); // Clear error on input change
+        }}
       />
+      {errors.username && (
+        <Text style={styles.errorText}>{errors.username}</Text>
+      )}
+
       <TextInput
         style={styles.input}
         placeholder="Email"
         placeholderTextColor="#888"
-        onChangeText={text => setEmail(text)}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        onChangeText={text => {
+          setEmail(text);
+          setErrors({...errors, email: ''}); // Clear error on input change
+        }}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
       <TextInput
         style={styles.input}
         placeholder="Password"
         placeholderTextColor="#888"
         secureTextEntry={true}
-        onChangeText={text => setPassword(text)}
+        onChangeText={text => {
+          setPassword(text);
+          setErrors({...errors, password: ''}); // Clear error on input change
+        }}
       />
+      {errors.password && (
+        <Text style={styles.errorText}>{errors.password}</Text>
+      )}
 
-      <TouchableOpacity
-        style={styles.LogInButton}
-        onPress={() => {
-          signUp();
-          navigation.navigate('Login', {userName: username});
-        }}>
+      {errors.general && <Text style={styles.errorText}>{errors.general}</Text>}
+
+      <TouchableOpacity style={styles.LogInButton} onPress={signUp}>
         <Text style={styles.ButtonText}>Sign Up</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
@@ -82,15 +128,13 @@ export const Signup = () => {
 const styles = StyleSheet.create({
   Container: {
     backgroundColor: '#FFA621',
-
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   input: {
-    width: '80%', // Adjust width as needed
-    height: 50, // Adjust height as needed
+    width: '80%',
+    height: 50,
     backgroundColor: '#fff',
     borderRadius: 10,
     paddingHorizontal: 15,
@@ -103,19 +147,18 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, // For Android shadow effect
+    elevation: 3,
   },
-
   LogInButton: {
     backgroundColor: 'black',
     borderWidth: 3,
     borderColor: '#FFA621',
-    width: '100%', // Button stretches to full width of the container
-    maxWidth: 300, // Optional: limits the maximum width of the button
+    width: '100%',
+    maxWidth: 300,
     paddingVertical: 12,
     borderRadius: 8,
     marginTop: 20,
-    alignItems: 'center', // Centers text inside the button
+    alignItems: 'center',
   },
   ButtonText: {
     color: 'white',
@@ -123,7 +166,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'left',
+    width: '80%',
+    marginTop: -5,
+    marginBottom: 10,
+  },
 });
-function alert(arg0: string) {
-  throw new Error('Function not implemented.');
-}

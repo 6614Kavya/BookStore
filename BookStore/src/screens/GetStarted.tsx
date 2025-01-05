@@ -18,7 +18,9 @@ const GetStarted = () => {
         onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.ButtonText}>Sign Up</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.LogInButton}>
+      <TouchableOpacity
+        style={styles.LogInButton}
+        onPress={() => navigation.navigate('Login')}>
         <Text style={styles.ButtonText}>Log In</Text>
       </TouchableOpacity>
     </View>

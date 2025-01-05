@@ -4,17 +4,23 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {BookCard} from '../components/BookCard';
 import useStore from '../store';
+import 'firebase/auth';
+// import {firebase} from '@react-native-firebase/auth';
+import {FIREBASE_AUTH} from '../../FirebaseConfig';
+import {signOut} from 'firebase/auth';
 
-export const Home = ({route}) => {
+export const Home = ({route, navigation}) => {
   const [userName, setUserName] = useState('');
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const {clickCount} = useStore();
+  const auth = FIREBASE_AUTH;
 
   const getBooks = async () => {
     try {
@@ -39,8 +45,18 @@ export const Home = ({route}) => {
     }
   };
 
+  const handleLogout = async () => {
+    navigation.replace('Login'); // Navigate to the login screen on logout
+    try {
+      await signOut(auth);
+      console.log('User logged out successfully!');
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
   useEffect(() => {
-    const {userName: name} = route.params || {}; // Destructure safely
+    const {userName: name} = route.params.userName || {}; // Destructure safely
     setUserName(name || 'Guest');
     getBooks();
   }, []);
@@ -59,10 +75,19 @@ export const Home = ({route}) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
       <View style={styles.floatingButton}>
         <Text style={styles.buttonText}>{clickCount}</Text>
       </View>
-      <Text style={{fontSize: 24, color: 'white', textAlign: 'center'}}>
+      <Text
+        style={{
+          fontSize: 24,
+          color: 'white',
+          textAlign: 'center',
+          paddingBottom: 20,
+        }}>
         Hi {userName}!
       </Text>
       <FlatList
@@ -108,6 +133,20 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: '#000080',
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: '#FF0000',
+    padding: 10,
+    borderRadius: 5,
+    zIndex: 2,
+  },
+  logoutButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

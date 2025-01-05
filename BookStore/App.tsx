@@ -1,70 +1,30 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-import {
-  createStaticNavigation,
-  NavigationContainer,
-} from '@react-navigation/native';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login} from './src/screens/Login';
 import {Signup} from './src/screens/Signup';
 import {Home} from './src/screens/Home';
 import GetStarted from './src/screens/GetStarted';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-const Stack = createNativeStackNavigator({
-  initialRouteName: 'Start',
-  screenOptions: {
-    headerShown: false, // Hide header title for all screens
-  },
-  screens: {
-    Start: GetStarted,
-    Home: Home,
-    Login: Login,
-    Signup: Signup,
-  },
-});
-
-const Navigation = createStaticNavigation(Stack);
+const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
-  // const isDarkMode = useColorScheme() === 'dark';
-
-  // const backgroundStyle = {
-  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  // };
-
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Navigation />
-    </SafeAreaView>
+    <NavigationContainer>
+      <SafeAreaView style={{flex: 1}}>
+        <Stack.Navigator
+          initialRouteName="Start"
+          screenOptions={{
+            headerShown: false, // Hide header title for all screens
+          }}>
+          <Stack.Screen name="Start" component={GetStarted} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Signup" component={Signup} />
+        </Stack.Navigator>
+      </SafeAreaView>
+    </NavigationContainer>
   );
 }
 
