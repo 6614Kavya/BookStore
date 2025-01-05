@@ -3,15 +3,13 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {BookCard} from '../components/BookCard';
 import useStore from '../store';
-import 'firebase/auth';
-// import {firebase} from '@react-native-firebase/auth';
 import {FIREBASE_AUTH} from '../../FirebaseConfig';
 import {signOut} from 'firebase/auth';
 
@@ -46,7 +44,7 @@ export const Home = ({route, navigation}) => {
   };
 
   const handleLogout = async () => {
-    navigation.replace('Login'); // Navigate to the login screen on logout
+    // navigation.replace('Login'); // Navigate to the login screen on logout
     try {
       await signOut(auth);
       console.log('User logged out successfully!');
@@ -86,10 +84,11 @@ export const Home = ({route, navigation}) => {
           fontSize: 24,
           color: 'white',
           textAlign: 'center',
-          paddingBottom: 20,
+          paddingBottom: 10,
         }}>
         Hi {userName}!
       </Text>
+
       <FlatList
         data={items}
         renderItem={({item}) => (
