@@ -1,12 +1,19 @@
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 const GetStarted = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.Container}>
+      <LottieView
+        source={require('../assets/bookAnimation.json')}
+        style={{width: '50%', height: '50%'}}
+        autoPlay
+        loop
+      />
       <Text style={{fontSize: 36, color: 'white', textAlign: 'center'}}>
         Keep Reading
       </Text>
